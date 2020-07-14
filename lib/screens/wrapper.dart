@@ -5,6 +5,8 @@ import 'package:firebasefluttertest/screens/home/home.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {
+  static const String id = "Wrapper";
+
   @override
   Widget build(BuildContext context) {
 

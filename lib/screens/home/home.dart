@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebasefluttertest/services/authServices.dart';
 class Home extends StatelessWidget {
+  static const String id = "Home";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

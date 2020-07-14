@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebasefluttertest/services/authServices.dart';
 import 'package:flutter/material.dart';
-import 'screens/wrapper.dart';
 import 'package:provider/provider.dart';
+
+import 'screens/wrapper.dart';
+import 'screens/home/home.dart';
+import 'screens/authenticate/signIn.dart';
+import 'screens/authenticate/register.dart';
+import 'package:firebasefluttertest/services/authServices.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +19,13 @@ class MyApp extends StatelessWidget {
     return StreamProvider<FirebaseUser>.value(
       value: AuthServices().user,
       child: MaterialApp(
-        home: Wrapper(),
+        initialRoute: Wrapper.id,
+        routes: {
+          Wrapper.id: (context) => Wrapper(),
+          Register.id:(context) => Register(),
+          SignIn.id: (context) => SignIn(),
+          Home.id: (context) => Home()
+        },
       ),
     );
   }

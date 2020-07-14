@@ -1,27 +1,23 @@
-import 'package:firebasefluttertest/screens/authenticate/register.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter/services.dart';
 
-import 'package:firebasefluttertest/services/authServices.dart';
-import 'package:firebasefluttertest/constants.dart';
 import 'package:firebasefluttertest/components/rounded_button.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:firebasefluttertest/constants.dart';
+import 'package:firebasefluttertest/screens/authenticate/signIn.dart';
 
 
-class SignIn extends StatefulWidget {
-  static const String id = "SignIn";
+class Register extends StatefulWidget {
+  static const String id = "Register";
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
-
-  final AuthServices _auth = AuthServices();
-  bool showSpinner = false;
+class _RegisterState extends State<Register> {
   String email;
   String password;
-
+  bool showSpinner = false;
   @override
   void initState(){
     super.initState();
@@ -29,6 +25,7 @@ class _SignInState extends State<SignIn> {
       DeviceOrientation.portraitUp
     ]);
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -42,75 +39,75 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Flexible(
-                child: Hero(
-                  tag: 'logo',
-                  child: Container(
-                    height: 200.0,
-                    child: Image.asset('images/logo.png'),
-                  ),
+              Hero(
+                tag: 'logo',
+                child: Container(
+                  height: 200.0,
+                  child: Image.asset('images/logo.png'),
                 ),
               ),
               SizedBox(
                 height: 48.0,
               ),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  email = value;
-                },
-                decoration:
-                kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
+              TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: kSecondaryColor),
+                  onChanged: (value) {
+                    email = value;
+                  },
+                  decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Enter your email'),
               ),
               SizedBox(
                 height: 8.0,
               ),
-              TextField(
-                obscureText: true,
-                textAlign: TextAlign.center,
+              TextFormField(
+                  obscureText: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: kSecondaryColor),
                 onChanged: (value) {
-                  password = value;
-                },
-                decoration: kTextFieldDecoration.copyWith(
+                    password = value;
+                  },
+                  decoration: kTextFieldDecoration.copyWith(
                     hintText: 'Enter your password'),
               ),
               SizedBox(
                 height: 24.0,
               ),
               RoundedButton(
-                text: 'Log In',
+                text: 'Register',
                 colour: kSecondaryColor,
-                onPressed: () async {
+                onPressed: () async{
 //                  setState(() {
 //                    showSpinner = true;
 //                  });
-//                  try {
-//                    final user = await _auth.signInWithEmailAndPassword(
-//                        email: email, password: password);
-//                    if (user != null) {
+//                  try{
+//                    final newUser =await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+//                    if(newUser != null){
 //                      Navigator.pushNamed(context, ChatScreen.id);
 //                    }
-//
 //                    setState(() {
 //                      showSpinner = false;
 //                    });
-//                  } catch (e) {
+//                  }
+//                  catch(e){
 //                    print(e);
 //                  }
-                },
+               },
               ),
               InkWell(
                 child: Text(
-                  'Create an account',
+                    'Already have an account?',
                   style: TextStyle(
-                    color: kSecondaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
+                      color: kSecondaryColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
                   ),
+
                 ),
                 onTap: (){
-                  Navigator.popAndPushNamed(context, Register.id);
+                  Navigator.popAndPushNamed(context, SignIn.id);
                 },
               )
             ],
