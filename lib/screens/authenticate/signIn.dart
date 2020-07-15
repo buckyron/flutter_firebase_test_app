@@ -61,19 +61,7 @@ class _SignInState extends State<SignIn> {
                   email = value;
                 },
                 decoration:
-                kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                obscureText: true,
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  password = value;
-                },
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Enter your password'),
+                kTextFieldDecoration.copyWith(hintText: 'Enter OTP'),
               ),
               SizedBox(
                 height: 24.0,
@@ -81,24 +69,7 @@ class _SignInState extends State<SignIn> {
               RoundedButton(
                 text: 'Log In',
                 colour: kSecondaryColor,
-                onPressed: () async {
-//                  setState(() {
-//                    showSpinner = true;
-//                  });
-//                  try {
-//                    final user = await _auth.signInWithEmailAndPassword(
-//                        email: email, password: password);
-//                    if (user != null) {
-//                      Navigator.pushNamed(context, ChatScreen.id);
-//                    }
-//
-//                    setState(() {
-//                      showSpinner = false;
-//                    });
-//                  } catch (e) {
-//                    print(e);
-//                  }
-                },
+                onPressed: () {}
               ),
               InkWell(
                 child: Text(

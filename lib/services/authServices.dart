@@ -1,38 +1,36 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebasefluttertest/screens/authenticate/register.dart';
+import 'package:firebasefluttertest/screens/home/home.dart';
+import 'package:flutter/material.dart';
 
-class AuthServices{
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Stream<FirebaseUser> get user{
-    return _auth.onAuthStateChanged;
+class AuthServices {
+  //Handles Auth
+  handleAuth() {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            return Home();
+          } else {
+            return Register();
+          }
+        });
   }
 
-  // sign in  anonymous
-
-  Future signInAnon() async{
-    try{
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
-      return user;
-    }catch (e){
-      print(e.toString());
-      return null;
-    }
+  //Sign out
+  signOut() {
+    FirebaseAuth.instance.signOut();
   }
 
-  // sign in using email & password
-
-  // register using email & password
-
-  // sign out
-  Future signOut() async{
-    try{
-      return await _auth.signOut();
-    }catch(e){
-      print(e.toString());
-      return null;
-    }
+  //SignIn
+  signIn(AuthCredential authCreds) {
+    FirebaseAuth.instance.signInWithCredential(authCreds);
   }
 
+  signInWithOTP(smsCode, verId) {
+    AuthCredential authCreds = PhoneAuthProvider.getCredential(
+        verificationId: verId, smsCode: smsCode);
+    signIn(authCreds);
+  }
 }

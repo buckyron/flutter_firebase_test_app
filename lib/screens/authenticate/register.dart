@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:firebasefluttertest/services/authServices.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebasefluttertest/components/rounded_button.dart';
+import 'package:firebasefluttertest/components/phoneField.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebasefluttertest/constants.dart';
-import 'package:firebasefluttertest/screens/authenticate/signIn.dart';
+
 
 
 class Register extends StatefulWidget {
@@ -15,9 +18,14 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  String email;
-  String password;
+  final AuthServices _auth = AuthServices();
   bool showSpinner = false;
+
+  String phoneNo, verificationId, smsCode;
+
+  bool codeSent = false;
+
+
   @override
   void initState(){
     super.initState();
@@ -25,7 +33,8 @@ class _RegisterState extends State<Register> {
       DeviceOrientation.portraitUp
     ]);
   }
-  
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,71 +58,70 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 48.0,
               ),
-              TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: kSecondaryColor),
-                  onChanged: (value) {
-                    email = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Enter your email'),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextFormField(
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: kSecondaryColor),
-                onChanged: (value) {
-                    password = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Enter your password'),
-              ),
-              SizedBox(
-                height: 24.0,
-              ),
-              RoundedButton(
-                text: 'Register',
-                colour: kSecondaryColor,
-                onPressed: () async{
-//                  setState(() {
-//                    showSpinner = true;
-//                  });
-//                  try{
-//                    final newUser =await  _auth.createUserWithEmailAndPassword(email: email, password: password);
-//                    if(newUser != null){
-//                      Navigator.pushNamed(context, ChatScreen.id);
-//                    }
-//                    setState(() {
-//                      showSpinner = false;
-//                    });
-//                  }
-//                  catch(e){
-//                    print(e);
-//                  }
-               },
-              ),
-              InkWell(
-                child: Text(
-                    'Already have an account?',
-                  style: TextStyle(
-                      color: kSecondaryColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                  ),
-
-                ),
-                onTap: (){
-                  Navigator.popAndPushNamed(context, SignIn.id);
-                },
-              )
+              Padding(
+                  padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(hintText: 'Enter phone number'),
+                    onChanged: (val) {
+                      setState(() {
+                        this.phoneNo = val;
+                      });
+                    },
+                  )),
+              codeSent ? Padding(
+                  padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(hintText: 'Enter OTP'),
+                    onChanged: (val) {
+                      setState(() {
+                        this.smsCode = val;
+                      });
+                    },
+                  )) : Container(),
+              SizedBox(height: 10,),
+              Padding(
+                  padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                  child: RoundedButton(
+                      text: codeSent ? 'Login':'Verify',
+                      onPressed: () {
+                        codeSent ? AuthServices().signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
+                      }))
             ],
           ),
         ),
       ),
     );
   }
+
+  Future<void> verifyPhone(phoneNo) async {
+  final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+    AuthServices().signIn(authResult);
+  };
+
+  final PhoneVerificationFailed verificationfailed =
+      (AuthException authException) {
+        final snackBar = SnackBar(content: Text("Exception!! message:" + authException.message.toString()));
+    Scaffold.of(context).showSnackBar(snackBar);  };
+
+  final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+    this.verificationId = verId;
+    setState(() {
+      this.codeSent = true;
+    });
+  };
+
+  final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+    this.verificationId = verId;
+  };
+
+  await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phoneNo,
+      timeout: const Duration(seconds: 5),
+      verificationCompleted: verified,
+      verificationFailed: verificationfailed,
+      codeSent: smsSent,
+      codeAutoRetrievalTimeout: autoTimeout);
+}
 }
