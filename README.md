@@ -4,13 +4,14 @@ A new Flutter application.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Dont forget to do the following steps as setup.
 
-A few resources to get you started if this is your first Flutter project:
+Step 1: Create an android project on firebase.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Step 2: Download and add the google_services.json file to the directory android/apps.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Step 3: Add the lines prompted in firebase to the respective build.gradle files.
+
+Step 4 for phone authentication get the sha1 key and paste it in firebase settings.
+        https://stackoverflow.com/questions/51845559/generate-sha-1-for-flutter-app 
+  follow this link to get the sha1 key.
